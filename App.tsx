@@ -10,8 +10,8 @@ import {
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
-import Home from './screens/Home';
-import MyStack from './component/stack/stack';
+import Home from './src/screens/Home';
+import MyStack from './src/components/stack/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
 
