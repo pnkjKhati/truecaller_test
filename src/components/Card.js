@@ -11,34 +11,34 @@ const Card = ({ onSwipeLeft, onSwipeRight }) => {
                 position.setValue({ x: gestureState.dx, y: 0 });
             },
             onPanResponderRelease: (_, gestureState) => {
-                // if (gestureState.dx > 10) {
-                //     // Swipe right
-                //     Animated.timing(position, {
-                //         toValue: { x: 40, y: 0 },
-                //         duration: 300,
-                //         useNativeDriver: false,
-                //     }).start(() => onSwipeRight());
-                // } else if (gestureState.dx < -10) {
-                //     // Swipe left
-                //     Animated.timing(position, {
-                //         toValue: { x: -40, y: 0 },
-                //         duration: 300,
-                //         useNativeDriver: false,
-                //     }).start(() => onSwipeLeft());
-                // } else {
-                //     // Reset position
-                //     Animated.spring(position, {
-                //         toValue: { x: 0, y: 0 },
-                //         useNativeDriver: false,
-                //     }).start();
-                // }
+                if (gestureState.dx > 10) {
+                    // Swipe right
+                    Animated.timing(position, {
+                        toValue: { x: 40, y: 0 },
+                        duration: 300,
+                        useNativeDriver: false,
+                    }).start(() => onSwipeRight());
+                } else if (gestureState.dx < -10) {
+                    // Swipe left
+                    Animated.timing(position, {
+                        toValue: { x: -40, y: 0 },
+                        duration: 300,
+                        useNativeDriver: false,
+                    }).start(() => onSwipeLeft());
+                } else {
+                    // Reset position
+                    Animated.spring(position, {
+                        toValue: { x: 0, y: 0 },
+                        useNativeDriver: false,
+                    }).start();
+                }
             },
         })
     ).current;
 
     return (
         <>
-            <View style={{ backgroundColor: 'green', height: 42, position: 'relative', marginBottom: 20 }}></View>
+            <View style={{ backgroundColor: 'green', height: 50, position: 'relative', marginBottom: 20 }}></View>
             <Animated.View
                 {...panResponder.panHandlers}
                 style={[
