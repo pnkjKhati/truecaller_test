@@ -1,10 +1,11 @@
-import { Animated, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import { Animated, FlatList, StyleSheet, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Card from '../components/Card';
 
 const Home = ({ navigation }) => {
     const translateY = useState(new Animated.Value(0))[0];
-    const [isVisible, setIsVisible] = useState(true)
+    const [scrollY, setScrollY] = useState(0);
+    const [scrollToDown, setScrollToDown] = useState(false)
 
     const handleSwipeLeft = () => {
         navigation.navigate("Chat")
@@ -14,49 +15,54 @@ const Home = ({ navigation }) => {
         navigation.navigate("Dial")
     };
 
-    const scrollBegin = (e) => {
-        Animated.timing(translateY, {
-            toValue: 10,
-            duration: 300,
-            useNativeDriver: false,
-        }).start();
-    }
-
-    const scrollEnd = (e) => {
-        Animated.timing(translateY, {
-            toValue: 0,
-            duration: 300,
-            useNativeDriver: false,
-        }).start();
-    };
+    useEffect(() => {
+        if (scrollToDown) {
+            Animated.timing(translateY, {
+                toValue: 70,
+                duration: 300,
+                useNativeDriver: true,
+            }).start();
+        }
+    }, [scrollToDown])
 
     return (
         <View style={styles.container}>
             <FlatList
                 data={new Array(100)}
                 renderItem={({ item }) => <Card onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />}
-                // onScroll={handleScroll}
-                onScrollBeginDrag={scrollBegin}
-                onScrollEndDrag={scrollEnd}
+                onMomentumScrollEnd={() => {
+                    Animated.timing(translateY, {
+                        toValue: 0,
+                        duration: 300,
+                        useNativeDriver: true,
+                    }).start();
+                    setScrollToDown(false)
+                }}
+                onScroll={(e) => {
+                    const currentScrollY = e.nativeEvent.contentOffset.y;
+
+                    if (currentScrollY > scrollY) {
+                        if (!scrollToDown) setScrollToDown(true)
+                    } else {
+                        // scrollEnd()
+                    }
+
+                    setScrollY(currentScrollY);
+                }}
             />
             <Animated.View
                 style={
                     [
                         styles.hideItem,
-                        // { bottom: isVisible ? 20 : -100 },
                         {
                             transform: [
                                 {
-                                    translateY: translateY.interpolate({
-                                        inputRange: [0, 10],
-                                        outputRange: [0, 100],
-                                    }),
+                                    translateY: translateY
                                 },
                             ],
                         },
                     ]}
             ></Animated.View>
-
         </View >
     )
 }

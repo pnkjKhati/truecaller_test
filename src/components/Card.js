@@ -6,30 +6,33 @@ const Card = ({ onSwipeLeft, onSwipeRight }) => {
 
     const panResponder = useRef(
         PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
+            // onStartShouldSetPanResponder: () => true,
+            onMoveShouldSetPanResponder: () => true,
             onPanResponderMove: (_, gestureState) => {
                 position.setValue({ x: gestureState.dx, y: 0 });
             },
             onPanResponderRelease: (_, gestureState) => {
                 if (gestureState.dx > 10) {
+                    onSwipeRight()
                     // Swipe right
                     Animated.timing(position, {
-                        toValue: { x: 40, y: 0 },
+                        toValue: { x: 0, y: 0 },
                         duration: 300,
-                        useNativeDriver: false,
-                    }).start(() => onSwipeRight());
+                        useNativeDriver: true,
+                    }).start()
                 } else if (gestureState.dx < -10) {
                     // Swipe left
+                    onSwipeLeft();
                     Animated.timing(position, {
-                        toValue: { x: -40, y: 0 },
+                        toValue: { x: 0, y: 0 },
                         duration: 300,
-                        useNativeDriver: false,
-                    }).start(() => onSwipeLeft());
+                        useNativeDriver: true,
+                    }).start()
                 } else {
                     // Reset position
                     Animated.spring(position, {
                         toValue: { x: 0, y: 0 },
-                        useNativeDriver: false,
+                        useNativeDriver: true,
                     }).start();
                 }
             },
@@ -58,7 +61,6 @@ const Card = ({ onSwipeLeft, onSwipeRight }) => {
                     </View>
                 </View>
                 <View><Text style={{ color: "white" }}>Image</Text></View>
-                {/* </View> */}
             </Animated.View>
         </>
     );
@@ -67,9 +69,7 @@ const Card = ({ onSwipeLeft, onSwipeRight }) => {
 const styles = StyleSheet.create({
     card: {
         width: '100%',
-        // borderRadius: 10,
         height: 50,
-        // elevation: 5,
         alignItems: 'center',
         borderWidth: 1,
         flexDirection: 'row',
